@@ -1,0 +1,48 @@
+# --- Environments ---
+# Ignore virtual environment folders
+/venv
+/env
+/.venv
+/venv*
+
+# Ignore environment variable files
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+# Ignore Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore distribution and packaging directories
+/build/
+/dist/
+*.egg-info/
+
+# --- Streamlit ---
+# Ignore Streamlit's configuration and secrets directory
+.streamlit/
+
+# --- IDEs and Editors ---
+# Visual Studio Code
+.vscode/
+# PyCharm
+.idea/
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# --- Testing & Coverage ---
+# Ignore testing artifacts and coverage reports
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# --- Other ---
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
