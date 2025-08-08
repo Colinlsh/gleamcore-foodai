@@ -97,6 +97,16 @@ def get_headers():
     }
 
 
+def get_file_upload_headers():
+    """Get headers for file uploads (without Content-Type to allow multipart/form-data)"""
+    if not st.session_state.api_key:
+        return {}
+    return {
+        "Authorization": f"Bearer {st.session_state.api_key}",
+        # Don't set Content-Type - let requests handle it for multipart/form-data
+    }
+
+
 def check_backend_health():
     """Check if the backend is running"""
     try:
@@ -195,12 +205,25 @@ def get_food_recommendations_api(query: str):
 def start_document_processing_job(file_path: str):
     """Start document processing job and return job_id"""
     try:
-        response = requests.post(
-            f"{BACKEND_URL}/extract-menu-items",
-            params={"file_path": file_path},
-            headers=get_headers(),
-            timeout=30,
-        )
+        # Open and send the actual file instead of just the path
+        filename = os.path.basename(file_path)
+        # Determine MIME type based on file extension
+        mime_type = 'application/pdf'
+        if filename.lower().endswith(('.jpg', '.jpeg')):
+            mime_type = 'image/jpeg'
+        elif filename.lower().endswith('.png'):
+            mime_type = 'image/png'
+        elif filename.lower().endswith(('.doc', '.docx')):
+            mime_type = 'application/msword'
+        
+        with open(file_path, 'rb') as file:
+            files = {'file': (filename, file, mime_type)}
+            response = requests.post(
+                f"{BACKEND_URL}/upload-document",
+                files=files,
+                headers=get_file_upload_headers(),
+                timeout=30,
+            )
 
         if response.status_code == 200:
             return response.json()
